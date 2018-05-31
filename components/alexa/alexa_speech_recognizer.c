@@ -118,6 +118,7 @@ ssize_t send_speech_read_callback(nghttp2_session *session, int32_t stream_id,
             //render_samples((char*) buf, bytes_written, &buf_desc);
 
             rounds++;
+            // TODO: test if if(rounds > 4) is better
             if(rounds > 1) {
                 rounds = 0;
                 yield = true;
@@ -130,7 +131,7 @@ ssize_t send_speech_read_callback(nghttp2_session *session, int32_t stream_id,
 
         case DONE:
             audio_recorder_stop();
-            //renderer_stop();
+            renderer_stop();
             ESP_LOGE(TAG, "DONE");
             multipart_end(buffer);
             *data_flags |= NGHTTP2_DATA_FLAG_EOF;
@@ -158,7 +159,7 @@ ssize_t send_speech_read_callback(nghttp2_session *session, int32_t stream_id,
 void speech_recognizer_start_capture(alexa_session_t *alexa_session)
 {
     state = SPEECH_RECOGNIZING;
-    //renderer_start();
+    renderer_start();
     audio_recorder_start();
 
     alexa_stream_t *stream_events = get_stream_events(alexa_session);
